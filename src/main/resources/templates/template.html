@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord Admin</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #6a11cb;
+            --secondary-color: #2575fc;
+            --success-color: #28a745;
+            --info-color: #17a2b8;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .sidebar {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            min-height: 100vh;
+            color: rgb(3, 16, 6)
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(9, 9, 9, 0.8);
+            margin-bottom: 5px;
+            border-radius: 5px;
+            padding: 10px 15px;
+        }
+        
+        .sidebar .nav-link:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .sidebar .nav-link.active {
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+        }
+        
+        .sidebar .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            padding: 20px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 20px;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: none;
+            border-radius: 10px 10px 0 0 !important;
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+        
+        .stat-card {
+            border-left: 4px solid;
+            border-radius: 8px;
+        }
+        
+        .stat-card.primary {
+            border-left-color: var(--primary-color);
+        }
+        
+        .stat-card.success {
+            border-left-color: var(--success-color);
+        }
+        
+        .stat-card.warning {
+            border-left-color: var(--warning-color);
+        }
+        
+        .stat-card.danger {
+            border-left-color: var(--danger-color);
+        }
+        
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 10px 20px;
+        }
+        
+        .badge-notification {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            font-size: 10px;
+            padding: 3px 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block sidebar collapse bg-gradient">
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/40" alt="User" class="img-fluid">
+                    <div>
+                        <h6 class="mb-0">Admin User</h6>
+                        <small>Administrateur</small>
+                    </div>
+                </div>
+                <ul class="nav flex-column pt-3">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Tableau de bord
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-users"></i>
+                            Utilisateurs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-box-open"></i>
+                            Produits
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-shopping-cart"></i>
+                            Commandes
+                            <span class="badge bg-danger badge-notification">5</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-chart-line"></i>
+                            Statistiques
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-cog"></i>
+                            Paramètres
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <nav class="navbar navbar-expand-lg navbar-light mb-4">
+                    <div class="container-fluid">
+                        <button class="navbar-toggler" type="button">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="d-flex align-items-center">
+                            <div class="dropdown ms-3">
+                                <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown">
+                                    <span class="d-none d-sm-inline mx-1">Admin</span>
+                                    <img src="https://via.placeholder.com/30" alt="Admin" width="32" height="32" class="rounded-circle">
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="#">Profil</a></li>
+                                    <li><a class="dropdown-item" href="#">Paramètres</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#">Déconnexion</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Tableau de Bord</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group me-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary">Partager</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary">Exporter</button>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-primary">
+                            <i class="fas fa-plus"></i> Nouveau
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card stat-card primary">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-2">Ventes</h6>
+                                        <h3 class="mb-0">24,500</h3>
+                                    </div>
+                                    <div class="bg-primary bg-opacity-10 p-3 rounded">
+                                        <i class="fas fa-shopping-cart text-primary"></i>
+                                    </div>
+                                </div>
+                                <p class="text-muted mb-0 mt-2">
+                                    <span class="text-success"><i class="fas fa-caret-up"></i> 12.5%</span> vs mois dernier
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card success">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-2">Utilisateurs</h6>
+                                        <h3 class="mb-0">1,250</h3>
+                                    </div>
+                                    <div class="bg-success bg-opacity-10 p-3 rounded">
+                                        <i class="fas fa-users text-success"></i>
+                                    </div>
+                                </div>
+                                <p class="text-muted mb-0 mt-2">
+                                    <span class="text-success"><i class="fas fa-caret-up"></i> 8.3%</span> vs mois dernier
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card warning">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-2">Commandes</h6>
+                                        <h3 class="mb-0">356</h3>
+                                    </div>
+                                    <div class="bg-warning bg-opacity-10 p-3 rounded">
+                                        <i class="fas fa-boxes text-warning"></i>
+                                    </div>
+                                </div>
+                                <p class="text-muted mb-0 mt-2">
+                                    <span class="text-danger"><i class="fas fa-caret-down"></i> 2.4%</span> vs mois dernier
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card danger">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-2">Revenus</h6>
+                                        <h3 class="mb-0">$48,250</h3>
+                                    </div>
+                                    <div class="bg-danger bg-opacity-10 p-3 rounded">
+                                        <i class="fas fa-dollar-sign text-danger"></i>
+                                    </div>
+                                </div>
+                                <p class="text-muted mb-0 mt-2">
+                                    <span class="text-success"><i class="fas fa-caret-up"></i> 15.7%</span> vs mois dernier
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="row mt-4">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Performance des Ventes</h5>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-secondary">Mensuel</button>
+                                    <button class="btn btn-sm btn-outline-secondary active">Hebdomadaire</button>
+                                    <button class="btn btn-sm btn-outline-secondary">Quotidien</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <!-- Chart.js canvas would go here -->
+                                    <canvas id="salesChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Sources de Trafic</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <!-- Chart.js canvas would go here -->
+                                    <canvas id="trafficChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Commandes Récentes</h5>
+                                <a href="#" class="btn btn-sm btn-link">Voir tout</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID Commande</th>
+                                                <th>Client</th>
+                                                <th>Date</th>
+                                                <th>Montant</th>
+                                                <th>Statut</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>#ORD-0001</td>
+                                                <td>Jean Dupont</td>
+                                                <td>02/05/2025</td>
+                                                <td>$125.00</td>
+                                                <td><span class="badge bg-success">Livré</span></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">Voir</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>#ORD-0002</td>
+                                                <td>Marie Martin</td>
+                                                <td>01/05/2025</td>
+                                                <td>$89.50</td>
+                                                <td><span class="badge bg-warning text-dark">En cours</span></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">Voir</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>#ORD-0003</td>
+                                                <td>Pierre Durand</td>
+                                                <td>30/04/2025</td>
+                                                <td>$234.00</td>
+                                                <td><span class="badge bg-info">Expédié</span></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">Voir</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>#ORD-0004</td>
+                                                <td>Sophie Lambert</td>
+                                                <td>29/04/2025</td>
+                                                <td>$156.75</td>
+                                                <td><span class="badge bg-danger">Annulé</span></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">Voir</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        // Sales Chart
+        const salesCtx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(salesCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                datasets: [{
+                    label: 'Ventes 2025',
+                    data: [65, 59, 80, 81, 56, 55, 40],
+                    backgroundColor: 'rgba(106, 17, 203, 0.2)',
+                    borderColor: 'rgba(106, 17, 203, 1)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+
+        // Traffic Chart
+        const trafficCtx = document.getElementById('trafficChart').getContext('2d');
+        const trafficChart = new Chart(trafficCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Direct', 'Social', 'Email', 'Recherche'],
+                datasets: [{
+                    data: [300, 150, 100, 200],
+                    backgroundColor: [
+                        '#6a11cb',
+                        '#2575fc',
+                        '#17a2b8',
+                        '#ffc107'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
