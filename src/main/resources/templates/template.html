@@ -32,7 +32,7 @@
         .sidebar {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             min-height: 100vh;
-            color: rgb(3, 16, 6)
+            color: rgb(3, 16, 6);
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
         
@@ -138,6 +138,10 @@
             padding: 3px 6px;
         }
     </style>
+
+        <link rel="stylesheet" href="/css/styles.css" />
+  
+    
 </head>
 <body>
     <div class="container-fluid">
@@ -151,7 +155,16 @@
                         <small>Administrateur</small>
                     </div>
                 </div>
+
+                
                 <ul class="nav flex-column pt-3">
+                    <!-- Dans la partie sidebar -->
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/suppliers}">
+                            <i class="fas fa-truck"></i>
+                            Listes Fournisseurs
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="#">
                             <i class="fas fa-tachometer-alt"></i>
@@ -250,22 +263,24 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="card stat-card success">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h6 class="text-muted mb-2">Utilisateurs</h6>
-                                        <h3 class="mb-0">1,250</h3>
+                        <a th:href="@{/suppliers}" class="text-decoration-none">
+                            <div class="card stat-card success">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="text-muted mb-2">Fournisseurs</h6>
+                                            <h3 class="mb-0">1,250</h3>
+                                        </div>
+                                        <div class="bg-success bg-opacity-10 p-3 rounded">
+                                            <i class="fas fa-truck text-success"></i> <!-- Changé l'icône users par truck -->
+                                        </div>
                                     </div>
-                                    <div class="bg-success bg-opacity-10 p-3 rounded">
-                                        <i class="fas fa-users text-success"></i>
-                                    </div>
+                                    <p class="text-muted mb-0 mt-2">
+                                        <span class="text-success"><i class="fas fa-caret-up"></i> 8.3%</span> vs mois dernier
+                                    </p>
                                 </div>
-                                <p class="text-muted mb-0 mt-2">
-                                    <span class="text-success"><i class="fas fa-caret-up"></i> 8.3%</span> vs mois dernier
-                                </p>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-md-3">
                         <div class="card stat-card warning">

@@ -20,6 +20,9 @@ public class LoginResponseDTO {
         this.sessionId = sessionId;
         this.fullName = fullName;
     }
+public boolean isSuccess() {
+    return this.success;
+}
 
 
 }
