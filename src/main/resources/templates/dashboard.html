@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tableau de bord</title>
+</head>
+<body>
+    <header>
+        <h1>Bienvenue, <span th:text="${session.user}">Utilisateur</span>!</h1>
+        <a th:href="@{/logout}">Déconnexion</a>
+    </header>
+    
+    <main>
+        <p>Vous êtes maintenant connecté à ERPNext.</p>
+        <a th:href="${session.home_page}" target="_blank">Accéder à ERPNext</a>
+    </main>
+</body>
+</html>
